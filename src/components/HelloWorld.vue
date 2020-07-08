@@ -1,18 +1,8 @@
 <template>
   <div id="app">
     <span>{{ error }}</span>
-    <form @submit="shorten">
-      <input type="text" v-model="longUrl" name="url" />
-      <input type="submit" value="Shorten" />
-    </form>
     <div class="new-url">
       <span>{{shortUrl}}</span>
-    </div>
-    <div>
-      <h2>Shortened Urls</h2>
-      <div class="url-list" v-for="(url, index) in urls" :key="index">
-        <span>{{ url.short}}</span>
-      </div>
     </div>
   </div>
 </template>
@@ -57,13 +47,5 @@ export default Vue.extend({
 });
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
 </style>
