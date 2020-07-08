@@ -1,17 +1,19 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <Header title="URL Shortener" />
+    <HelloWorld />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import Header from './components/Header.vue';
 import HelloWorld from './components/HelloWorld.vue';
 
 export default Vue.extend({
   name: 'App',
   components: {
+    Header,
     HelloWorld,
   },
 });
