@@ -1,7 +1,5 @@
 import express from "express";
 import cors from "cors";
-import { connectDb } from "./db";
-import { PORT } from "./utils/config";
 import { getUrls, receiveUrl, welcome } from "./controllers";
 import bodyParser from "body-parser";
 
@@ -23,8 +21,4 @@ app.use(express.static(__dirname + '/public/'));
   // Handle SPA
 app.get(/.*/, (req,res) => res.sendFile(__dirname + '/public/index.html'));
 
-connectDb().then(async () => {
-  app.listen(PORT, () =>
-    console.log(`URL SHORTENER SERVER listening on port ${PORT}!`)
-  );
-});
+export default app;

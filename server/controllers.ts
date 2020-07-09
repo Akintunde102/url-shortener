@@ -8,7 +8,6 @@ import randomString from "./utils/randomString";
 export async function getUrls(req: Request, res: Response) {
   const {limit: stringLimit, lastCreationTime = null, type = null} = req.query;
   const limit = parseInt(stringLimit as string, 10);
-  console.log(req.query);
   let urls;
   if (!lastCreationTime && !type){
     urls = await Url.find({}).limit(limit).sort({ creationTime: -1 });
