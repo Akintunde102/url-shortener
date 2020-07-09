@@ -17,7 +17,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "nodemon --watch 'server/**/*.ts' --ignore 'server/**/*.spec.ts' --exec ts-node server/server.ts"
+    "dev": "nodemon --watch 'server/**/*.ts' --ignore 'server/**/*.spec.ts' --exec ts-node server/server.ts",
+    "start": "cd client && npm run build && cd .. && ts-node server/server.ts"
   },
   "author": "",
   "license": "ISC"
