@@ -59,7 +59,7 @@ export default Vue.extend({
         this.protocol = 'http';
       }
 
-      Axios.post('http://127.0.0.1:4000/url', {
+      Axios.post('/api/url/', {
         longUrl: this.longUrl,
         creationTime: UNIXTimeStamp,
         protocol: this.protocol,

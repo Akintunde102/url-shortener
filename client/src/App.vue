@@ -29,7 +29,7 @@ export default Vue.extend({
   },
   methods: {
     getUrls(type = '') {
-      Axios.get('http://127.0.0.1:4000/urls', {
+      Axios.get('/api/urls/', {
         params: {
           limit: 5,
           ...(this.lastCreationTime !== '' && type !== 'latest' ? { lastCreationTime: this.lastCreationTime } : {}),
