@@ -26,7 +26,9 @@
     "build": "tsc",
     "dev": "nodemon --watch 'server/**/*.ts' --ignore 'server/**/*.spec.ts' --exec ts-node server/index.ts",
     "start": "cd client && npm run build && cd .. && ts-node server/index.ts",
-    "test": "jest --runInBand ./server/__tests__"
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "jest --runInBand ./server/__tests__",
+    "test:client": "cd client && npm run test:unit"
   },
   "author": "",
   "license": "ISC",
