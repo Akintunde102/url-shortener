@@ -21,6 +21,7 @@ import Vue from 'vue';
 import Axios from 'axios';
 import IsUrl from '../utils/isUrl';
 import GetUrlProtocol from '../utils/getUrlProtocol';
+import debug from '../utils/log';
 
 export default Vue.extend({
   name: 'Form',
@@ -38,7 +39,7 @@ export default Vue.extend({
       this.$copyText(this.shortUrl).then(() => {
         this.copyString = 'copied';
       }, (e) => {
-        console.log('Error While Copying', e);
+        debug.show(`Error While Copying, error: ${e}`);
       });
     },
     shorten(e: Event) {
@@ -67,7 +68,7 @@ export default Vue.extend({
         .then((response) => {
           const {
             status,
-            data: { shortUrl, longUrl, creationTime, protocol },
+            data: { shortUrl },
           } = response;
           if (status !== 200) {
             throw new Error('Something Went Wrong, Try Again');
@@ -78,7 +79,7 @@ export default Vue.extend({
           this.$emit('getUrls', 'latest');
         })
         .catch((err: Error) => {
-          console.log(err);
+          debug.stringify(err);
           this.error = 'Something Unexpected Happened';
         });
     },

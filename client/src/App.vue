@@ -12,6 +12,7 @@ import Axios from 'axios';
 import Header from './components/Header.vue';
 import Form from './components/Form.vue';
 import UrlList from './components/UrlList.vue';
+import debug from './utils/log';
 
 export default Vue.extend({
   name: 'App',
@@ -38,7 +39,6 @@ export default Vue.extend({
       })
         .then((response) => {
           const { status, data } = response;
-          console.log({ data: data.length, status });
           if (status !== 200) {
             throw new Error('Something Went Wrong, Try Again');
           }
@@ -48,8 +48,8 @@ export default Vue.extend({
           }
         })
         .catch((err: Error) => {
-          console.log(err);
           this.urlError = 'Something Unexpected Happened';
+          debug.stringify(err);
         });
     },
   },
