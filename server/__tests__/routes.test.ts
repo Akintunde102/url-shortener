@@ -1,8 +1,6 @@
-import mongoose from 'mongoose';
 import request from 'supertest';
 import * as dbHandler from './conf/dbHandler';
-import { Url } from '../server/db/models';
-import app from '../server/app';
+import app from '../app';
 
 /**
  * Connect to a new in-memory database before running any tests.

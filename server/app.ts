@@ -13,7 +13,6 @@ app.use(express.json());
 //Routes
 app.get("/api/urls", getUrls);
 app.post("/api/url", receiveUrl);
-app.get("/api/", welcome);
 
   // Static folder
 app.use(express.static(__dirname + '/public/'));
