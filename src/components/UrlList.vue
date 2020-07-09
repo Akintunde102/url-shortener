@@ -8,14 +8,14 @@
       </div>
       <div class="url-list" v-for="(url, index) in urls" :key="index">
         <div class="boxed each-url">
-          <span>{{ url.long}}</span>
-          <span>{{ url.created}}</span>
-          <span>{{ url.short}}</span>
+          <a :href="url.longUrl" class="link">{{url.protocol}}://{{ reduceLength(url.longUrl) }}</a>
+          <span>{{ toDateTime(url.creationTime) }}</span>
+          <a :href="url.shortUrl"  class="link">https://{{ url.shortUrl }}</a>
         </div>
       </div>
       <div class="boxed list-footer">
-        <span>Next</span>
-        <span>Previous</span>
+        <a @click="select('next')">Next &gt;</a>
+        <a @click="select('prev')">&lt; Previous</a>
       </div>
     </div>
   </div>
@@ -23,54 +23,33 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import isUrl from '../utils/isUrl';
 
 export default Vue.extend({
   name: 'UrlList',
+  props: ['urls'],
   data() {
     return {
       shortUrl: '',
       longUrl: '',
       error: '',
-      urls: [
-        {
-          id: 1,
-          short: 'https://pbid.io/abcdefgh',
-          long: 'facebook.com',
-          created: '2/2/2013',
-        },
-        {
-          id: 2,
-          created: '2/2/2013',
-          short: 'https://pbid.io/abcdefgh',
-          long: 'facebook.com',
-        },
-        {
-          id: 3,
-          created: '2/2/2013',
-          short: 'https://pbid.io/abcdefgh',
-          long: 'facebook.com',
-        },
-        {
-          id: 4,
-          created: '2/2/2013',
-          short: 'https://pbid.io/abcdefgh',
-          long: 'facebook.com',
-        },
-        {
-          id: 5,
-          created: '2/2/2013',
-          short: 'https://pbid.io/abcdefgh',
-          long: 'facebook.com',
-        },
-        {
-          id: 6,
-          created: '2/2/2013',
-          short: 'https://pbid.io/abcdefgh',
-          long: 'facebook.com',
-        },
-      ],
+      lastCreationTime: '',
     };
+  },
+  methods: {
+    toDateTime(timeInSeconds: string) {
+      const dateTime = new Date(parseInt(timeInSeconds, 10) * 1000);
+      const getPadded = (value: number) => `00${String(value)}`.slice(-2);
+      const formattedDate = `${dateTime.getFullYear()}-${getPadded(dateTime.getMonth() + 1)
+      }-${getPadded(dateTime.getDate())} ${getPadded(dateTime.getHours())}:${getPadded(dateTime.getMinutes())}`;
+      return formattedDate;
+    },
+    select(type: string) {
+      this.$emit('getUrls', type);
+    },
+    reduceLength(val: string) {
+      const dots = val.length > 15 ? '...' : '';
+      return val.substr(0, 15) + dots;
+    },
   },
 });
 </script>
@@ -84,11 +63,26 @@ div.list-section {
   display: flex;
   justify-content: center;
   flex-direction: row;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
 }
 
 div.list-header {
   display: flex;
   flex-direction: row;
+  background-color:#cbcac9;
+}
+
+div.list-footer {
+  display: flex;
+  flex-direction: row-reverse;
+  background-color: #cbcac9;
+}
+
+div.list-footer a{
+  color: royalblue;
+  margin: 0 10px;
+  cursor: pointer;
 }
 
 div.list-header span {
@@ -98,16 +92,24 @@ div.list-header span {
 div.each-url {
   display: flex;
   flex-direction: row;
+
 }
 
-div.each-url span {
+div.each-url > * {
   flex: 1;
+  padding: 10px;
+  text-decoration: none;
 }
 
 div.boxed {
-  background: slategray;
-  padding: 10px;
-  border: 2px solid blue;
+  padding: 10px 20px;
+  border: 1px solid #cbcac9;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+span.link {
+  color: royalblue;
 }
 div.url-list {
   width: 70vw;

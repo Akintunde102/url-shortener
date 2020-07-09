@@ -1,16 +1,15 @@
 <template>
   <div id="app">
     <Header title="URL Shortener" />
-    <Form />
-    <HelloWorld />
-    <UrlList />
+    <Form @getUrls="getUrls($event)"/>
+    <UrlList  @getUrls="getUrls($event)" :urls="urls" :urlError=urlError />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import Axios from 'axios';
 import Header from './components/Header.vue';
-import HelloWorld from './components/HelloWorld.vue';
 import Form from './components/Form.vue';
 import UrlList from './components/UrlList.vue';
 
@@ -18,9 +17,44 @@ export default Vue.extend({
   name: 'App',
   components: {
     Header,
-    HelloWorld,
     Form,
     UrlList,
+  },
+  data() {
+    return {
+      urls: [],
+      lastCreationTime: '',
+      urlError: '',
+    };
+  },
+  methods: {
+    getUrls(type = '') {
+      Axios.get('http://127.0.0.1:4000/urls', {
+        params: {
+          limit: 5,
+          ...(this.lastCreationTime !== '' && type !== 'latest' ? { lastCreationTime: this.lastCreationTime } : {}),
+          ...(type !== '' && type !== 'latest' ? { type } : {}),
+        },
+      })
+        .then((response) => {
+          const { status, data } = response;
+          console.log({ data: data.length, status });
+          if (status !== 200) {
+            throw new Error('Something Went Wrong, Try Again');
+          }
+          if (data.length) {
+            this.urls = data;
+            this.lastCreationTime = data[data.length - 1].creationTime;
+          }
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          this.urlError = 'Something Unexpected Happened';
+        });
+    },
+  },
+  created() {
+    this.getUrls();
   },
 });
 </script>

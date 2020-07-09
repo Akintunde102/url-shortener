@@ -10,7 +10,7 @@
 
       <div class="shortened">
         <h3>{{shortUrl}}</h3>
-        <button>Copy</button>
+        <button  :disabled="copyString==='copied'" @click="doCopy">{{copyString}}</button>
       </div>
     </div>
   </div>
@@ -18,27 +18,69 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import isUrl from '../utils/isUrl';
+import Axios from 'axios';
+import IsUrl from '../utils/isUrl';
+import GetUrlProtocol from '../utils/getUrlProtocol';
 
 export default Vue.extend({
   name: 'Form',
   data() {
     return {
-      shortUrl: 'facebook.com',
+      shortUrl: '',
       longUrl: '',
       error: '',
+      protocol: '',
+      copyString: 'copy',
     };
   },
   methods: {
+    doCopy() {
+      this.$copyText(this.shortUrl).then(() => {
+        this.copyString = 'copied';
+      }, (e) => {
+        console.log('Error While Copying', e);
+      });
+    },
     shorten(e: Event) {
       e.preventDefault();
-      if (isUrl(this.longUrl)) {
-        this.error = '';
-        const newUrl = `https://pbid.io/${this.longUrl}`;
-        this.shortUrl = newUrl;
+      const UNIXTimeStamp = Math.round(new Date().getTime() / 1000);
+      if (!IsUrl(this.longUrl.toLowerCase())) {
+        this.error = 'Bad Url, Check and try again';
         return;
       }
-      this.error = 'Bad Url, Check and try again';
+      const providedProtocol = GetUrlProtocol(this.longUrl);
+
+      if (providedProtocol) {
+        this.longUrl = this.longUrl.split('://').pop() as string;
+        this.protocol = providedProtocol;
+      }
+
+      if (!providedProtocol) {
+        this.protocol = 'http';
+      }
+
+      Axios.post('http://127.0.0.1:4000/url', {
+        longUrl: this.longUrl,
+        creationTime: UNIXTimeStamp,
+        protocol: this.protocol,
+      })
+        .then((response) => {
+          const {
+            status,
+            data: { shortUrl, longUrl, creationTime, protocol },
+          } = response;
+          if (status !== 200) {
+            throw new Error('Something Went Wrong, Try Again');
+          }
+          this.shortUrl = `https://${shortUrl}`;
+          this.error = '';
+          this.copyString = 'Copy';
+          this.$emit('getUrls', 'latest');
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          this.error = 'Something Unexpected Happened';
+        });
     },
   },
 });
