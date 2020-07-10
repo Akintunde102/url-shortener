@@ -2,7 +2,7 @@
   <div class="list-section">
     <div class="centered">
       <div v-if="listLoading === false" class="list-view">
-        <h2>Previous Shortened URLs</h2>
+        <h2>Previously Shortened URLs</h2>
         <div class="boxed list-header">
           <span class="longUrl-header">Original Url</span>
           <span class="time-header">Created</span>
