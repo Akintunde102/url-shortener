@@ -4,7 +4,7 @@
 A Full Stack Typescript/Node/Vue Application that shortens url.
 
 ## Installation
-- Clone with : `git clone https://github.com/Akintunde102/url-shortener`
+- Clone with : `git clone https://github.com/Akintunde102/url-shortener.git`
 - Then run with or without docker as specified below
 
 ### How to run With Docker:
