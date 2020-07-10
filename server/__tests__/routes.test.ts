@@ -39,7 +39,7 @@ describe('Get lists of URLs', () => {
           creationTime: 1594309259,
           protocol: 'http'
         });
-      expect(res.status).toEqual(200)
+      expect(res.status).toEqual(200);
     })
   });
   

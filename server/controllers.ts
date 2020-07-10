@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import { Url } from "./db";
 import { DOMAIN } from "./utils/config";
 import { statusCodes } from "./utils/constants";
-import ri from "./utils/log";
+import debug from "./utils/log";
 import randomString from "./utils/randomString";
 
-export async function getUrls(req: Request, res: Response) {
+export async function getUrls(req: Request, res: Response): Promise<void> {
   const {limit: stringLimit, lastCreationTime = null, type = null} = req.query;
   const limit = parseInt(stringLimit as string, 10);
   let urls;
@@ -25,7 +25,7 @@ export async function getUrls(req: Request, res: Response) {
   res.status(statusCodes.OK).json(urls);
 }
 
-export async function receiveUrl(req: Request, res: Response) {
+export async function receiveUrl(req: Request, res: Response): Promise<void> {
   const { longUrl, creationTime, protocol } = req.body;
   const shortUrl = `${DOMAIN}/${randomString(8)}`;
 
@@ -39,7 +39,7 @@ export async function receiveUrl(req: Request, res: Response) {
   res.status(statusCodes.OK).json(urlDetails);
 }
 
-export async function welcome(req: Request, res: Response) {
-  ri.show("Welcome to URL SHORTENER SERVER");
+export async function welcome(req: Request, res: Response): Promise<void> {
+  debug.show("Welcome to URL SHORTENER SERVER");
   res.status(statusCodes.OK).send("Welcome to URL SHORTENER SERVER");
 }
