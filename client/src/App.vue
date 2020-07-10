@@ -35,7 +35,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    getUrls(type = '') {
+    getUrls(type = ''): void {
       Axios.get('/api/urls/', {
         params: {
           limit: 5,
@@ -62,7 +62,7 @@ export default Vue.extend({
         });
     },
   },
-  created() {
+  created(): void {
     this.listLoading = true;
     this.getUrls();
   },

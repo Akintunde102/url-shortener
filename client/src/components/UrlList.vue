@@ -2,7 +2,7 @@
   <div class="list-section">
     <div class="centered">
       <div v-if="listLoading === false" class="list-view">
-<h2> Previous Shortened URLs </h2>
+        <h2>Previous Shortened URLs</h2>
         <div class="boxed list-header">
           <span class="longUrl-header">Original Url</span>
           <span class="time-header">Created</span>
@@ -10,11 +10,13 @@
         </div>
         <div class="url-list" v-for="(url, index) in urls" :key="index">
           <div class="boxed each-url">
-            <a :href="url.longUrl" class="link longUrl"
+            <a :href="addProtocol(url.longUrl, url.protocol)" class="link longUrl"
               >{{ url.protocol }}://{{ reduceLength(url.longUrl) }}</a
             >
             <span class="time">{{ toDateTime(url.creationTime) }}</span>
-            <a :href="url.shortUrl" class="link">https://{{ url.shortUrl }}</a>
+            <a :href="addProtocol(url.shortUrl, 'https://')" class="link"
+              >https://{{ url.shortUrl }}</a
+            >
           </div>
         </div>
         <div class="boxed list-footer">
@@ -42,7 +44,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    toDateTime(timeInSeconds: string) {
+    toDateTime(timeInSeconds: string): string {
       const dateTime = new Date(parseInt(timeInSeconds, 10) * 1000);
       const getPadded = (value: number) => `00${String(value)}`.slice(-2);
       const formattedDate = `${dateTime.getFullYear()}-${getPadded(
@@ -52,19 +54,22 @@ export default Vue.extend({
       )}`;
       return formattedDate;
     },
-    select(type: string) {
+    select(type: string): void {
       this.$emit('getUrls', type);
     },
-    reduceLength(val: string) {
+    reduceLength(val: string): string {
       const dots = val.length > 15 ? '...' : '';
       return val.substr(0, 15) + dots;
+    },
+    addProtocol(url: string, protocol: string): string {
+      return `${protocol}://${url}`;
     },
   },
 });
 </script>
 
 <style scoped>
-h2{
+h2 {
   text-align: center;
 }
 
@@ -72,10 +77,10 @@ div {
   margin: 0 auto;
 }
 
-div.list-view{
-   min-width: 300px;
-   width: 70vw;
-   overflow-x: scroll;
+div.list-view {
+  min-width: 300px;
+  width: 70vw;
+  overflow-x: scroll;
 }
 
 div.list-section {
@@ -129,7 +134,6 @@ span.link {
 }
 
 span.time {
-
 }
 
 div.centered {
@@ -146,14 +150,16 @@ h5 {
 }
 
 @media screen and (max-width: 850px) {
- span.time, span.time-header {
-   display: none;
-}
+  span.time,
+  span.time-header {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 650px) {
- a.longUrl, span.longUrl-header {
-   display: none;
-}
+  a.longUrl,
+  span.longUrl-header {
+    display: none;
+  }
 }
 </style>

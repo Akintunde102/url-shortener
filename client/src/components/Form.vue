@@ -35,14 +35,14 @@ export default Vue.extend({
     };
   },
   methods: {
-    doCopy() {
+    doCopy(): void {
       this.$copyText(this.shortUrl).then(() => {
         this.copyString = 'copied';
       }, (e) => {
         debug.show(`Error While Copying, error: ${e}`);
       });
     },
-    shorten(e: Event) {
+    shorten(e: Event): void {
       e.preventDefault();
       const UNIXTimeStamp = Math.round(new Date().getTime() / 1000);
       if (!IsUrl(this.longUrl.toLowerCase())) {

@@ -1,4 +1,4 @@
-export default function geturlProtocol(urlString: string) {
+export default function geturlProtocol(urlString: string): string | null {
   let protocol = null;
   if (urlString.includes('https://')) {
     protocol = 'https';

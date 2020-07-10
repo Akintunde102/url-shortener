@@ -1,7 +1,7 @@
 /* eslint-disable */
-const ri = {
+const log = {
   show: (data: string) => console.log(data),
   stringify: (data: object) => console.log(JSON.stringify(data)),
 };
 
-export default ri;
+export default log;
