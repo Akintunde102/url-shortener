@@ -1,8 +1,13 @@
 <template>
   <div id="app">
     <Header title="URL Shortener" />
-    <Form @getUrls="getUrls($event)"/>
-    <UrlList  @getUrls="getUrls($event)" :urls="urls" :urlError=urlError />
+    <Form @getUrls="getUrls($event)" />
+    <UrlList
+      :listLoading="listLoading"
+      @getUrls="getUrls($event)"
+      :urls="urls"
+      :urlError="urlError"
+    />
   </div>
 </template>
 
@@ -26,6 +31,7 @@ export default Vue.extend({
       urls: [],
       lastCreationTime: '',
       urlError: '',
+      listLoading: true,
     };
   },
   methods: {
@@ -33,7 +39,9 @@ export default Vue.extend({
       Axios.get('/api/urls/', {
         params: {
           limit: 5,
-          ...(this.lastCreationTime !== '' && type !== 'latest' ? { lastCreationTime: this.lastCreationTime } : {}),
+          ...(this.lastCreationTime !== '' && type !== 'latest'
+            ? { lastCreationTime: this.lastCreationTime }
+            : {}),
           ...(type !== '' && type !== 'latest' ? { type } : {}),
         },
       })
@@ -46,6 +54,7 @@ export default Vue.extend({
             this.urls = data;
             this.lastCreationTime = data[data.length - 1].creationTime;
           }
+          this.listLoading = false;
         })
         .catch((err: Error) => {
           this.urlError = 'Something Unexpected Happened';
@@ -54,6 +63,7 @@ export default Vue.extend({
     },
   },
   created() {
+    this.listLoading = true;
     this.getUrls();
   },
 });
