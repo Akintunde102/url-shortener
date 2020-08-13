@@ -1,9 +1,34 @@
 import { Request, Response } from "express";
-import { Url } from "./db";
+import { Url, User } from "./db";
 import { DOMAIN } from "./utils/config";
 import { statusCodes } from "./utils/constants";
 import debug from "./utils/log";
 import randomString from "./utils/randomString";
+
+export async function processLogin(req: Request, res: Response): Promise<void> {
+  const {username, password} = req.body.params;
+  let ifPresent: any[] = [];
+
+  if (username && password){
+    ifPresent = await User.find({username, password});
+  }
+
+  debug.stringify({type: 'login', username, password, ifPresent: ifPresent.length});
+  res.status(ifPresent.length ? statusCodes.OK : statusCodes.NOT_FOUND).json(ifPresent);
+}
+
+export async function processRegister(req: Request, res: Response): Promise<void> {
+  const {username, password, fullName, role} = req.body.params;
+  
+  let userDetails;
+
+  if (username && password && fullName && role){
+    userDetails = await new User({username, password, fullName, role}).save();
+  }
+  debug.stringify({type: 'Register', username, password, fullName, role, userDetails});
+  
+  res.status(userDetails ? statusCodes.OK : statusCodes.UNEXPECTED).json(userDetails);
+}
 
 export async function getUrls(req: Request, res: Response): Promise<void> {
   const {limit: stringLimit, lastCreationTime = null, type = null} = req.query;

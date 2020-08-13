@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Url } from "./models";
+import { Url, User } from "./models";
 import { DB_CONN_STRING } from "../utils/config";
 
 const connectDb = () => {
@@ -10,4 +10,4 @@ const connectDb = () => {
   });
 };
 
-export { connectDb, Url };
+export { connectDb, Url, User };
