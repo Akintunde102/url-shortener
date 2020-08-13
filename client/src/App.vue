@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <Header v-bind:logged="logged" />
-    <Auth
-      v-if="logged === false"
-      v-on:changeLoggedStatus="updateLoggedStatus($event)"
+    <Header title="URL Shortener" />
+    <Form @getUrls="getUrls($event)" />
+    <UrlList
+      :listLoading="listLoading"
+      @getUrls="getUrls($event)"
+      :urls="urls"
+      :urlError="urlError"
     />
   </div>
 </template>
@@ -12,14 +15,16 @@
 import Vue from 'vue';
 import Axios from 'axios';
 import Header from './components/Header.vue';
-import Auth from './components/Auth.vue';
+import Form from './components/Form.vue';
+import UrlList from './components/UrlList.vue';
 import debug from './utils/log';
 
 export default Vue.extend({
   name: 'App',
   components: {
-    Auth,
     Header,
+    Form,
+    UrlList,
   },
   data() {
     return {
@@ -28,9 +33,6 @@ export default Vue.extend({
       urlError: '',
       listLoading: true,
     };
-  },
-  computed: {
-    logged() { return this.$store.state.logged; },
   },
   methods: {
     getUrls(type = ''): void {
@@ -45,7 +47,6 @@ export default Vue.extend({
       })
         .then((response) => {
           const { status, data } = response;
-          debug.stringify({ response });
           if (status !== 200) {
             throw new Error('Something Went Wrong, Try Again');
           }
